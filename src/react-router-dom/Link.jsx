@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Route from "./Route";
 import Context from "./context";
 
 class Link extends Component {

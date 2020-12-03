@@ -6,24 +6,22 @@ class Route extends Component {
   static contextType = Context;
   state = {};
   render() {
-    const { path, component: Component, exact } = this.props;
     const location = this.context.location;
+    const history = this.context.history;
+    const pathname = location.pathname;
+    const { path, component: Component, exact = false } = this.props;
     const regexp = pathToRegexp(path, [], { end: exact });
-   
-    console.log("123123");
-    if (typeof path === 'object') {
-        const { pathname, state } = path;
-        if (regexp.test(location.pathname)) {
-            return <Component location={location} state={state}/>;
-          } else {
-            return null;
-          }
+    const result = pathname.match(regexp);
+    const porps = {
+      location,
+      history,
+    };
+    if (result) {
+      if (Component) {
+        return <Component {...porps} />;
+      }
     }
-    if (regexp.test(location.pathname)) {
-      return <Component location={location} />;
-    } else {
-      return null;
-    }
+    return null;
   }
 }
 

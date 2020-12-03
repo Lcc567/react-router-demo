@@ -14,6 +14,7 @@ class HashRouter extends Component {
       this.setState({
         location: {
           ...this.state.location,
+          state: this.locationState,
           pathname: window.location.hash.slice(1) || "/",
         },
       });
@@ -21,16 +22,22 @@ class HashRouter extends Component {
     window.location.hash = window.location.hash || "/";
   }
   render() {
-    console.log("location", window.history);
     const value = {
       location: this.state.location,
       history: {
-          location: this.state.location,
-          push: (to) => {
-              window.location.hash = to
+        location: this.state.location,
+        push: (to) => {
+          console.log('hashchagne', to);
+          if (typeof to == "object") {
+            this.locationState = to.state;
+            window.location.hash = to.pathname;
+          } else {
+            window.location.hash = to;
           }
-      }
+        },
+      },
     };
+    console.log("value", value);
     return (
       <Context.Provider value={value}>{this.props.children}</Context.Provider>
     );
