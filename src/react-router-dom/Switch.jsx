@@ -6,7 +6,6 @@ class Switch extends Component {
   static contextType = Context;
   state = {};
   render() {
-    console.log("this.props.children", this.props.children);
     if (!this.props.children) {
       return null;
     }
@@ -14,19 +13,18 @@ class Switch extends Component {
       const child = this.props.children[i];
       const { path, component: Component, exact = false, to } = child.props;
       //   redirect 重定向
-      // if (to) {
-      //   return child;
-      // }
+      if (to) {
+        return child;
+      }
 
       const regxp = pathToRegexp(path, [], { end: exact });
       const pathname = this.context.location.pathname;
       const result = pathname.match(regxp);
-      console.log("======", path, pathname, result);
       if (result) {
         return child;
       }
     }
-
+    return null;
   }
 }
 

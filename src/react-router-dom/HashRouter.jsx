@@ -4,7 +4,7 @@ import Context from "./context";
 class HashRouter extends Component {
   state = {
     location: {
-      pathname: window.location.hash.slice(1),
+      pathname: window.location.hash.slice(1) || '/',
       state: undefined,
     },
   };
@@ -27,8 +27,8 @@ class HashRouter extends Component {
       history: {
         location: this.state.location,
         push: (to) => {
-          console.log('hashchagne', to);
           if (typeof to == "object") {
+            console.log('======', to);
             this.locationState = to.state;
             window.location.hash = to.pathname;
           } else {
@@ -37,7 +37,6 @@ class HashRouter extends Component {
         },
       },
     };
-    console.log("value", value);
     return (
       <Context.Provider value={value}>{this.props.children}</Context.Provider>
     );

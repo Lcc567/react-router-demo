@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Children, Component } from "react";
 import { pathToRegexp } from "path-to-regexp";
 import Context from "./context";
 
@@ -9,18 +9,51 @@ class Route extends Component {
     const location = this.context.location;
     const history = this.context.history;
     const pathname = location.pathname;
-    const { path, component: Component, exact = false } = this.props;
-    const regexp = pathToRegexp(path, [], { end: exact });
+    const {
+      path = "/",
+      component: Component,
+      exact = false,
+      render,
+      children,
+    } = this.props;
+
+    // 处理路径参数
+    let keys = [];
+
+    const regexp = pathToRegexp(path, keys, { end: exact });
     const result = pathname.match(regexp);
-    const porps = {
+    const props = {
       location,
       history,
     };
     if (result) {
+      const params = {};
+      keys.reduce((pre, cur, index) => {
+        pre[cur.name] = result[index + 1];
+        return pre;
+      }, params);
+      const match = {
+        url: result[0],
+        params,
+      };
+      const props = {
+        location,
+        history,
+      };
+      props.match = match;
       if (Component) {
-        return <Component {...porps} />;
+        return <Component {...props} />;
+      } else if (render) {
+        return render(props);
+      } else if (children) {
+        return children(props);
+      }
+    } else {
+      if (children) {
+        return children(props);
       }
     }
+
     return null;
   }
 }

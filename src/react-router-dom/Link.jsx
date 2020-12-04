@@ -9,7 +9,7 @@ class Link extends Component {
     return (
       <a
         {...this.props}
-        onClick={() => {
+        onClick={(e) => {
           this.context.history.push(to);
         }}
       >
